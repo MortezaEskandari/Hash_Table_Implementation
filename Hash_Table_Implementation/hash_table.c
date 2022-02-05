@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "hash_table.h"
@@ -9,18 +10,20 @@ hash_table* new_ht(void) {
     hash_table* ht = (hash_table*) malloc(sizeof(hash_table));
 
     if(ht == NULL){
-        printf("Memory not allocated for new hash table.\n");
+        printf("Unable to allocate memory for new hash table.\n");
         printf("Quitting program...\n");
         exit(0); // abort program if malloc returned null
-    }
-    else{
-        printf("Memory allocated for new hash table successfully.\n");
-        printf("The address of the hash table is: %u\n", ht);
     }
 
     ht->size = 53; // starts with 53 by default
     ht->count = 0;
     ht->items = (ht_item**) calloc((size_t)ht->size, sizeof(ht_item*));
+
+    if(ht->items == NULL){
+        printf("Unable to allocate memory for array of items for the hash table.\n");
+        printf("Quitting program...\n");
+        exit(0); // abort program if calloc returned null
+    }
 
     return ht;
 }
@@ -65,19 +68,14 @@ hash_table* clear_table(hash_table* ht) {
 }
 
 // Hash Function used to get the index of the key
-static int ht_hash(const char* s, const int a, const int m) {
+static int ht_hash(const char* key, const int a, const int m) {
     long hash = 0;
-    const int len_s = strlen(s);
-    for (int i = 0; i < len_s; i++) {
-        hash += (long)pow(a, len_s - (i+1)) * s[i];
+    const int key_length = strlen(key);
+    for (int i = 0; i < key_length; i++) {
+        hash += (long)pow(a, key_length - (i+1)) * key[i];
         hash = hash % m;
     }
     return (int)hash;
-}
-
-//
-static int contains(){
-
 }
 
 // Double hashing for collisions
@@ -124,21 +122,45 @@ char* ht_search(hash_table* ht, const char* key) {
     return NULL;
 }
 
-//
-void remove_item(hash_table* ht, const char* key) {
-    int index = get_hash(key, ht->size, 0);
-    ht_item* item = ht->items[index];
-    int i = 1;
-    while (item != NULL) {
-        if (item != &HT_DELETED_ITEM) {
-            if (strcmp(item->key, key) == 0) {
-                ht_del_item(item);
-                ht->items[index] = &HT_DELETED_ITEM;
-            }
-        }
-        index = get_hash(key, ht->size, i);
-        item = ht->items[index];
-        i++;
+/* Checks if the key (given the item [key-value pair]) exists in the hash table
+   @param int index: the index of the hash table for the key after hashing
+   @param ht_item* item: the ht_item struct which contains the key-value pair
+   Returns 1 if true and 0 if false */
+static int contains_key(int index, ht_item* item){
+    // If ht_item is null then no item exists for that index which means the key does not exist
+    if(item == NULL){
+        return 0; // return 0, 0=false the key does not exist in the hash table
     }
-    ht->count--;
+
+    // else item exists at index, check if key is the same key passed into function
+    if(strcmp(item->key, key) == 0){
+        return 1; // return 1, 1=true the key exists in the hash table
+    }
+
+    return 0; // return 0, 0=false the key does not exist in the hash table
+}
+
+/* Remove item (key-value pair) in the hash table
+   If item does not exist in the hash table then it will
+   just print a message to the user*/
+void remove_item(hash_table* ht, const char* key) {
+    // Get the hash index for the given key
+    int index = get_hash(key, ht->size);
+
+    // Get the ht_item from the hash table at the index after hashing
+    ht_item* item = ht->items[index];
+
+    // Check if key exists in the hash table
+    int key_exists = contains_key(index, item); // 1 = true, 0 = false
+
+    // If it does not exist, print message to user, exit function
+    if(key_exists == 0){
+        printf("Key does not exist in the hash table.\n");
+        return; // terminate the function, continue the program
+    }
+    else if(key_exists == 1){ // Else it exists, remove it (free memory too)
+        clear_item(item); // free the memory for that item (key-value pair)
+        ht->items[index] = &HT_DELETED_ITEM; // mark this index in hash table as "deleted"
+        ht->num_items--; // decrement the num_items in hash table since we removed an item
+    }
 }
