@@ -1,7 +1,7 @@
 #ifndef HASH_TABLE_H_INCLUDED
 #define HASH_TABLE_H_INCLUDED
 
-#define HT_INITIAL_SIZE 17
+#define HT_INITIAL_SIZE
 
 /* hash table item (holds the key-value pair) struct
    hash table will be an array of these key-value pairs
@@ -25,9 +25,8 @@ hash_table* new_ht(void);
 /* Return the size (current capacity) of the hash table */
 int get_size(hash_table* ht);
 
-/* Clears the hash table and frees the memory, resets hash table
-   Returns a brand new hash table by calling new_ht function */
-hash_table* clear_table(hash_table* ht);
+/* Clears the hash table and frees the memory */
+void free_table(hash_table* ht);
 
 /* put item (key-value pair) into the hash table, if it does not already exist
    else do nothing and print a message to let user know */

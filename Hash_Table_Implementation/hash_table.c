@@ -17,6 +17,16 @@ static hash_table* ht_new_sized(const int base_size) {
         exit(0); // abort program if malloc returned null
     }
 
+    ht->table_size = base_size; // starts with 17 by default
+    ht->num_items = 0;
+    ht->items = (ht_item**) calloc((size_t)ht->size, sizeof(ht_item*));
+
+    if(ht->items == NULL){
+        printf("Unable to allocate memory for array of items for the hash table.\n");
+        printf("Quitting program...\n");
+        exit(0); // abort program if calloc returned null
+    }
+
     ht->table_size = base_size;
 
     ht->size = next_prime(ht->base_size);
@@ -65,7 +75,7 @@ static ht_item* ht_new_item(const char* k, const char* v) {
     return item;
 }
 
-/* Internal Function helper for clear_table function
+/* Internal Function helper for free_table function
    It frees memory for the passed in ht_item struct */
 static void free_item(ht_item* item) {
 
@@ -75,7 +85,7 @@ static void free_item(ht_item* item) {
 }
 
 /* Clears the hash table and frees the memory, resets hash table */
-hash_table* clear_table(hash_table* ht) {
+void free_table(hash_table* ht) {
 
     for (int i = 0; i < ht->table_size; i++) {
         ht_item* item = ht->items[i];
@@ -85,7 +95,6 @@ hash_table* clear_table(hash_table* ht) {
     }
     free(ht->items);
     free(ht);
-    return new_ht(void);
 }
 
 // Hash Function used to get the index of the key
