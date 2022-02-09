@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "hash_table.h"
+#include "prime.h"
 
 int main()
 {
