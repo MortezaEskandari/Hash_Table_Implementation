@@ -1,14 +1,16 @@
 # depslib dependency file v1.0
-1644469353 source:c:\users\morteza\desktop\hash table\hash_table_implementation\hash_table_implementation\main.c
+1644471631 source:c:\users\morteza\desktop\hash table\hash_table_implementation\hash_table_implementation\main.c
 	<stdio.h>
 	<stdlib.h>
 	"hash_table.h"
 	"prime.h"
 
-1643947381 source:c:\users\morteza\desktop\hash table\hash_table_implementation\hash_table_implementation\hash_table.c
+1644470341 source:c:\users\morteza\desktop\hash table\hash_table_implementation\hash_table_implementation\hash_table.c
 	<stdlib.h>
+	<stdio.h>
 	<string.h>
 	"hash_table.h"
+	"prime.h"
 
 1644469590 c:\users\morteza\desktop\hash table\hash_table_implementation\hash_table_implementation\hash_table.h
 

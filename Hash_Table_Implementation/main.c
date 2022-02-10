@@ -9,6 +9,7 @@ int main()
     int loop = 1; // loop = 1 (continue loop) , loop = 0 (end loop)
     int option = 0; // stores the option user choses
     int validOption = 0; // uses to check if the user input is a valid option (an int)
+    char* key, value;
 
     hash_table* ht = ht_new(); // The hash table initialization
 
@@ -18,7 +19,7 @@ int main()
         // get a valid user input
         do{
             // Give user options to choose from
-            printf("Please select an option below.\n\n");
+            printf("Please select an option below.\n");
             printf("1) Print Hash Table.\n");
             printf("2) Add Item.\n");
             printf("3) Delete Item.\n");
@@ -43,7 +44,32 @@ int main()
                 printf("Not implemented yet.\n");
                 break;
             case 2:
-                printf("Not implemented yet.\n");
+                key = (char*) malloc(sizeof(char)*256);
+
+                if(key == NULL){
+                    printf("Unable to allocate memory for key.\n");
+                    printf("Quitting program...\n");
+                    exit(0); // abort program if malloc returned null
+                }
+
+                value = (char*) malloc(sizeof(char)*256);
+
+                if(value == NULL){
+                    printf("Unable to allocate memory for value.\n");
+                    printf("Quitting program...\n");
+                    exit(0); // abort program if malloc returned null
+                }
+
+                printf("Enter key: ");
+                scanf("%255s",key);
+
+                printf("Enter value: ");
+                scanf("%255s",value);
+
+                ht_put_item(ht, key, value);
+
+                free(key);
+                free(value);
                 break;
             case 3:
                 printf("Not implemented yet.\n");

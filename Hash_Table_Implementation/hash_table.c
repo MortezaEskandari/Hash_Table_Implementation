@@ -37,7 +37,7 @@ hash_table* ht_new() {
 //
 static ht_item* ht_new_item(const char* key, const char* value) {
 
-    ht_item* item = malloc(sizeof(ht_item));
+    ht_item* item = (ht_item*) malloc(sizeof(ht_item));
 
     if(item == NULL){
         printf("Unable to allocate memory for new item (key-value) pair.\n");
