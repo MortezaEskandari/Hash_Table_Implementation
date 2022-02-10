@@ -7,7 +7,7 @@
 
 static ht_item HT_DELETED_ITEM = {NULL, NULL};
 
-static hash_table* ht_new_sized(const int base_size) {
+static hash_table* ht_new_sized(const int table_size) {
 
     hash_table* ht = (hash_table*) malloc(sizeof(hash_table));
 
@@ -17,7 +17,7 @@ static hash_table* ht_new_sized(const int base_size) {
         exit(0); // abort program if malloc returned null
     }
 
-    ht->table_size = base_size; // starts with 17 by default
+    ht->table_size = table_size; // starts with 17 by default if calling ht_new
     ht->num_items = 0;
     ht->items = (ht_item**) calloc((size_t)ht->size, sizeof(ht_item*));
 
@@ -27,36 +27,11 @@ static hash_table* ht_new_sized(const int base_size) {
         exit(0); // abort program if calloc returned null
     }
 
-    ht->table_size = base_size;
-
-    ht->size = next_prime(ht->base_size);
-
-    ht->count = 0;
-    ht->items = xcalloc((size_t)ht->size, sizeof(ht_item*));
     return ht;
 }
 
-hash_table* new_ht(void) {
-
-    hash_table* ht = (hash_table*) malloc(sizeof(hash_table));
-
-    if(ht == NULL){
-        printf("Unable to allocate memory for new hash table.\n");
-        printf("Quitting program...\n");
-        exit(0); // abort program if malloc returned null
-    }
-
-    ht->table_size = HT_INITIAL_SIZE; // starts with 17 by default
-    ht->num_items = 0;
-    ht->items = (ht_item**) calloc((size_t)ht->size, sizeof(ht_item*));
-
-    if(ht->items == NULL){
-        printf("Unable to allocate memory for array of items for the hash table.\n");
-        printf("Quitting program...\n");
-        exit(0); // abort program if calloc returned null
-    }
-
-    return ht;
+hash_table* ht_new(void) {
+    return ht_new_sized(HT_INITIAL_SIZE);
 }
 
 //
@@ -121,6 +96,14 @@ static int get_hash(const char* k, const int table_size, const int attempt) {
         const int hash_b = ht_hash(k, HT_PRIME_2, table_size);
         return (hash_a + (attempt * (hash_b + 1))) % table_size;
     }
+}
+
+static void ht_resize(hash_table* ht, const int table_size){
+    if(table_size < HT_INITIAL_SIZE){
+        return;
+    }
+
+
 }
 
 //

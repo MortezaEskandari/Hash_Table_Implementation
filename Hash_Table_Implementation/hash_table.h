@@ -20,7 +20,7 @@ typedef struct {
 } hash_table;
 
 /* Initialize an empty hash table and return its pointer to it */
-hash_table* new_ht(void);
+hash_table* ht_new(void);
 
 /* Return the size (current capacity) of the hash table */
 int get_size(hash_table* ht);
