@@ -19,7 +19,7 @@ static hash_table* ht_new_sized(const int new_table_size) {
 
     ht->table_size = new_table_size; // starts with 17 by default if calling ht_new
     ht->num_items = 0;
-    ht->items = (ht_item**) calloc((size_t)ht->size, sizeof(ht_item*));
+    ht->items = (ht_item**) calloc((size_t)ht->table_size, sizeof(ht_item*));
 
     if(ht->items == NULL){
         printf("Unable to allocate memory for array of items for the hash table.\n");
@@ -30,7 +30,7 @@ static hash_table* ht_new_sized(const int new_table_size) {
     return ht;
 }
 
-hash_table* ht_new(void) {
+hash_table* ht_new() {
     return ht_new_sized(HT_INITIAL_SIZE);
 }
 
@@ -103,8 +103,8 @@ static void ht_resize(hash_table* ht, const int new_table_size){
         return;
     }
 
-    ht_hash_table* new_ht = ht_new_sized(new_table_size);
-    for (int i = 0; i < ht->size; i++) {
+    hash_table* new_ht = ht_new_sized(new_table_size);
+    for (int i = 0; i < ht->table_size; i++) {
         ht_item* item = ht->items[i];
         if (item != NULL && item != &HT_DELETED_ITEM) {
             ht_put_item(new_ht, item->key, item->value);

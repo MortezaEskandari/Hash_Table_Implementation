@@ -2,6 +2,8 @@
 #define HASH_TABLE_H_INCLUDED
 
 #define HT_INITIAL_SIZE 17
+#define HT_PRIME_1 151
+#define HT_PRIME_2 191
 
 /* hash table item (holds the key-value pair) struct
    hash table will be an array of these key-value pairs
@@ -20,7 +22,7 @@ typedef struct {
 } hash_table;
 
 /* Initialize an empty hash table and return its pointer to it */
-hash_table* ht_new(void);
+hash_table* ht_new();
 
 /* Return the size (current capacity) of the hash table */
 int ht_get_size(hash_table* ht);
@@ -30,15 +32,15 @@ void ht_free_table(hash_table* ht);
 
 /* put item (key-value pair) into the hash table, if it does not already exist
    else do nothing and print a message to let user know */
-void ht_put_item(hash_table* ht, const char* k, const char* v);
+void ht_put_item(hash_table* ht, const char* key, const char* value);
 
 /* get item (key-value pair) from the hash  table, if it exists
-   Return: the pointer to ht_item (key-value pair), else null if not exist */
-ht_item* ht_get_item(hash_table* ht, const char* k);
+   Return: the value for the key given, else null if not exist */
+char* ht_get_item(hash_table* ht, const char* key);
 
 /* Remove item (key-value pair) in the hash table
    If item does not exist in the hash table then it will
    just print a message to the user*/
-void ht_remove_item(hash_table* ht, const char* k);
+void ht_remove_item(hash_table* ht, const char* key);
 
 #endif // HASH_TABLE_H_INCLUDED
