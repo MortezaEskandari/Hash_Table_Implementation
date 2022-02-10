@@ -7,7 +7,7 @@
 
 static ht_item HT_DELETED_ITEM = {NULL, NULL};
 
-static hash_table* ht_new_sized(int new_table_size) {
+static hash_table* ht_new_sized(const int new_table_size) {
 
     hash_table* ht = (hash_table*) malloc(sizeof(hash_table));
 
@@ -74,7 +74,7 @@ void ht_free_table(hash_table* ht) {
 }
 
 // Hash Function used to get the index of the key
-static int ht_hash(char* key, int prime_num, int table_size) {
+static int ht_hash(const char* key, int prime_num, int table_size) {
 
     long hash = 0;
     const int key_length = strlen(key);
@@ -86,7 +86,7 @@ static int ht_hash(char* key, int prime_num, int table_size) {
 }
 
 // Double hashing for collisions
-static int ht_get_hash(char* key, int table_size, int attempt) {
+static int ht_get_hash(const char* key, int table_size, int attempt) {
 
     if(attempt == 0){
         const int hash_a = ht_hash(key, HT_PRIME_1, table_size);
@@ -136,7 +136,7 @@ static void ht_resize_down(hash_table* ht){
 }
 
 //
-void ht_put_item(hash_table* ht, char* key, char* value) {
+void ht_put_item(hash_table* ht, const char* key, const char* value) {
 
     const int load = ht->num_items * 100 / ht->table_size;
     if(load > 70){
@@ -162,12 +162,13 @@ void ht_put_item(hash_table* ht, char* key, char* value) {
         cur_item = ht->items[index];
         i++;
     }
+
     ht->items[index] = item;
     ht->num_items++;
 }
 
 //
-char* ht_get_item(hash_table* ht, char* key) {
+char* ht_get_item(hash_table* ht, const char* key) {
 
     if(ht->num_items == 0){
         printf("n\Hash table is empty, no items to find.\n");
@@ -192,7 +193,7 @@ char* ht_get_item(hash_table* ht, char* key) {
 /* Remove item (key-value pair) in the hash table
    If item does not exist in the hash table then it will
    just print a message to the user*/
-void ht_remove_item(hash_table* ht, char* key) {
+void ht_remove_item(hash_table* ht, const char* key) {
 
     const int load = ht->num_items * 100 / ht->table_size;
     if (load < 10) {
@@ -233,14 +234,14 @@ void print_hash_table(hash_table* ht){
         ht_item* item = ht->items[i];
         if(item != NULL){
             if(item != &HT_DELETED_ITEM){
-                printf("%d)\tMemory: %p\tKey: %s\tValue: %s\n",i+1, item, item->key, item->value);
+                printf("%d)\tMemory: %p\tKey: %s\tValue: %s\n",i, item, item->key, item->value);
             }
             else if(item == &HT_DELETED_ITEM){
-                printf("%d)\tMemory: %p\tDELETED ITEM\n",i+1, item);
+                printf("%d)\tMemory: %p\tDELETED ITEM\n",i, item);
             }
         }
         else{
-            printf("%d)\tMemory: %p\tNULL\n",i+1, item);
+            printf("%d)\tMemory: %p\tNULL\n",i, item);
         }
     }
 }

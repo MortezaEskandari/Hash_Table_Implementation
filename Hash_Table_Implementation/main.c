@@ -9,7 +9,8 @@ int main()
     int loop = 1; // loop = 1 (continue loop) , loop = 0 (end loop)
     int option = 0; // stores the option user choses
     int validOption = 0; // uses to check if the user input is a valid option (an int)
-    char* key, value;
+    char* key;
+    char* value;
 
     hash_table* ht = ht_new(); // The hash table initialization
 
@@ -69,6 +70,8 @@ int main()
                 scanf("%255s",value);
 
                 ht_put_item(ht, key, value);
+
+                printf("\n");
 
                 free(key);
                 free(value);

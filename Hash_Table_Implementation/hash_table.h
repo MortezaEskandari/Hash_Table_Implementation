@@ -32,16 +32,16 @@ void ht_free_table(hash_table* ht);
 
 /* put item (key-value pair) into the hash table, if it does not already exist
    else do nothing and print a message to let user know */
-void ht_put_item(hash_table* ht, char* key, char* value);
+void ht_put_item(hash_table* ht, const char* key, const char* value);
 
 /* get item (key-value pair) from the hash  table, if it exists
    Return: the value for the key given, else null if not exist */
-char* ht_get_item(hash_table* ht, char* key);
+char* ht_get_item(hash_table* ht, const char* key);
 
 /* Remove item (key-value pair) in the hash table
    If item does not exist in the hash table then it will
    just print a message to the user*/
-void ht_remove_item(hash_table* ht, char* key);
+void ht_remove_item(hash_table* ht, const char* key);
 
 void print_hash_table(hash_table* ht);
 
