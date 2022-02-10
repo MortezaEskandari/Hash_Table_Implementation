@@ -35,7 +35,7 @@ hash_table* ht_new() {
 }
 
 //
-static ht_item* ht_new_item(char* key, char* value) {
+static ht_item* ht_new_item(const char* key, const char* value) {
 
     ht_item* item = (ht_item*) malloc(sizeof(ht_item));
 
@@ -45,10 +45,9 @@ static ht_item* ht_new_item(char* key, char* value) {
         exit(0); // abort program if malloc returned null
     }
 
-//    item->key = strdup(key);
-//    item->value = strdup(value);
-    item->key = key;
-    item->value = value;
+    item->key = strdup(key);
+    item->value = strdup(value);
+
     return item;
 }
 
@@ -139,35 +138,32 @@ static void ht_resize_down(hash_table* ht){
 //
 void ht_put_item(hash_table* ht, char* key, char* value) {
 
-    ht_item* item = ht_new_item(key, value);
-    ht->items[0] = item;
+    const int load = ht->num_items * 100 / ht->table_size;
+    if(load > 70){
+        ht_resize_up(ht);
+    }
 
-//    const int load = ht->num_items * 100 / ht->table_size;
-//    if(load > 70){
-//        ht_resize_up(ht);
-//    }
-//
-//    // initialize the item struct to insert into the hash table
-//    ht_item* item = ht_new_item(key, value);
-//
-//    // get the hash index the item (key-value pair) will be inserted at
-//    int index = ht_get_hash(item->key, ht->table_size, 0);
-//
-//    // check for collisions and keep double hashing until spot found
-//    ht_item* cur_item = ht->items[index];
-//    int i = 1;
-//    while (cur_item != NULL && cur_item != &HT_DELETED_ITEM) {
-//        if(strcmp(cur_item->key, key) == 0){
-//            ht_free_item(cur_item);
-//            ht->items[index] = item;
-//            return;
-//        }
-//        index = ht_get_hash(item->key, ht->table_size, i);
-//        cur_item = ht->items[index];
-//        i++;
-//    }
-//    ht->items[index] = item;
-//    ht->num_items++;
+    // initialize the item struct to insert into the hash table
+    ht_item* item = ht_new_item(key, value);
+
+    // get the hash index the item (key-value pair) will be inserted at
+    int index = ht_get_hash(item->key, ht->table_size, 0);
+
+    // check for collisions and keep double hashing until spot found
+    ht_item* cur_item = ht->items[index];
+    int i = 1;
+    while (cur_item != NULL && cur_item != &HT_DELETED_ITEM) {
+        if(strcmp(cur_item->key, key) == 0){
+            ht_free_item(cur_item);
+            ht->items[index] = item;
+            return;
+        }
+        index = ht_get_hash(item->key, ht->table_size, i);
+        cur_item = ht->items[index];
+        i++;
+    }
+    ht->items[index] = item;
+    ht->num_items++;
 }
 
 //
