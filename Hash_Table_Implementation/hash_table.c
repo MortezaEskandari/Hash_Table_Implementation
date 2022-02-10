@@ -202,7 +202,8 @@ void ht_remove_item(hash_table* ht, const char* key) {
 
     // Check if hash table is empty
     if(ht->num_items == 0){
-        printf("n\Hash table is empty, no items to remove.\n");
+        printf("\nHash table is empty, no items to remove.\n");
+        return;
     }
 
     // Get the hash index for the given key
@@ -227,6 +228,8 @@ void ht_remove_item(hash_table* ht, const char* key) {
         item = ht->items[index];
         i++;
     }
+
+    printf("\nItem does not exist in hash table.\n");
 }
 
 void print_hash_table(hash_table* ht){

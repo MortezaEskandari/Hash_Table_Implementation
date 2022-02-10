@@ -9,8 +9,8 @@ int main()
     int loop = 1; // loop = 1 (continue loop) , loop = 0 (end loop)
     int option = 0; // stores the option user choses
     int validOption = 0; // uses to check if the user input is a valid option (an int)
-    char* key;
-    char* value;
+    char *key, *value;
+//    char* value; // Above error when only putting * for key and not for value also other wise separate line for value like this line
 
     hash_table* ht = ht_new(); // The hash table initialization
 
@@ -77,7 +77,22 @@ int main()
                 free(value);
                 break;
             case 3:
-                printf("Not implemented yet.\n");
+                key = (char*) malloc(sizeof(char)*256);
+
+                if(key == NULL){
+                    printf("Unable to allocate memory for key.\n");
+                    printf("Quitting program...\n");
+                    exit(0); // abort program if malloc returned null
+                }
+
+                printf("Enter key: ");
+                scanf("%255s",key);
+
+                ht_remove_item(ht, key);
+
+                printf("\n");
+
+                free(key);
                 break;
             case 4:
                 printf("Not implemented yet.\n");
