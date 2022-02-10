@@ -7,7 +7,7 @@
 
 static ht_item HT_DELETED_ITEM = {NULL, NULL};
 
-static hash_table* ht_new_sized(const int new_table_size) {
+static hash_table* ht_new_sized(int new_table_size) {
 
     hash_table* ht = (hash_table*) malloc(sizeof(hash_table));
 
@@ -35,7 +35,7 @@ hash_table* ht_new() {
 }
 
 //
-static ht_item* ht_new_item(const char* key, const char* value) {
+static ht_item* ht_new_item(char* key, char* value) {
 
     ht_item* item = (ht_item*) malloc(sizeof(ht_item));
 
@@ -45,8 +45,10 @@ static ht_item* ht_new_item(const char* key, const char* value) {
         exit(0); // abort program if malloc returned null
     }
 
-    item->key = strdup(key);
-    item->value = strdup(value);
+//    item->key = strdup(key);
+//    item->value = strdup(value);
+    item->key = key;
+    item->value = value;
     return item;
 }
 
@@ -73,7 +75,7 @@ void ht_free_table(hash_table* ht) {
 }
 
 // Hash Function used to get the index of the key
-static int ht_hash(const char* key, const int prime_num, const int table_size) {
+static int ht_hash(char* key, int prime_num, int table_size) {
 
     long hash = 0;
     const int key_length = strlen(key);
@@ -85,7 +87,7 @@ static int ht_hash(const char* key, const int prime_num, const int table_size) {
 }
 
 // Double hashing for collisions
-static int ht_get_hash(const char* key, const int table_size, const int attempt) {
+static int ht_get_hash(char* key, int table_size, int attempt) {
 
     if(attempt == 0){
         const int hash_a = ht_hash(key, HT_PRIME_1, table_size);
@@ -98,7 +100,7 @@ static int ht_get_hash(const char* key, const int table_size, const int attempt)
     }
 }
 
-static void ht_resize(hash_table* ht, const int new_table_size){
+static void ht_resize(hash_table* ht, int new_table_size){
     if(new_table_size < HT_INITIAL_SIZE){
         return;
     }
@@ -135,38 +137,41 @@ static void ht_resize_down(hash_table* ht){
 }
 
 //
-void ht_put_item(hash_table* ht, const char* key, const char* value) {
+void ht_put_item(hash_table* ht, char* key, char* value) {
 
-    const int load = ht->num_items * 100 / ht->table_size;
-    if(load > 70){
-        ht_resize_up(ht);
-    }
-
-    // initialize the item struct to insert into the hash table
     ht_item* item = ht_new_item(key, value);
+    ht->items[0] = item;
 
-    // get the hash index the item (key-value pair) will be inserted at
-    int index = ht_get_hash(item->key, ht->table_size, 0);
-
-    // check for collisions and keep double hashing until spot found
-    ht_item* cur_item = ht->items[index];
-    int i = 1;
-    while (cur_item != NULL && cur_item != &HT_DELETED_ITEM) {
-        if(strcmp(cur_item->key, key) == 0){
-            ht_free_item(cur_item);
-            ht->items[index] = item;
-            return;
-        }
-        index = ht_get_hash(item->key, ht->table_size, i);
-        cur_item = ht->items[index];
-        i++;
-    }
-    ht->items[index] = item;
-    ht->num_items++;
+//    const int load = ht->num_items * 100 / ht->table_size;
+//    if(load > 70){
+//        ht_resize_up(ht);
+//    }
+//
+//    // initialize the item struct to insert into the hash table
+//    ht_item* item = ht_new_item(key, value);
+//
+//    // get the hash index the item (key-value pair) will be inserted at
+//    int index = ht_get_hash(item->key, ht->table_size, 0);
+//
+//    // check for collisions and keep double hashing until spot found
+//    ht_item* cur_item = ht->items[index];
+//    int i = 1;
+//    while (cur_item != NULL && cur_item != &HT_DELETED_ITEM) {
+//        if(strcmp(cur_item->key, key) == 0){
+//            ht_free_item(cur_item);
+//            ht->items[index] = item;
+//            return;
+//        }
+//        index = ht_get_hash(item->key, ht->table_size, i);
+//        cur_item = ht->items[index];
+//        i++;
+//    }
+//    ht->items[index] = item;
+//    ht->num_items++;
 }
 
 //
-char* ht_get_item(hash_table* ht, const char* key) {
+char* ht_get_item(hash_table* ht, char* key) {
 
     if(ht->num_items == 0){
         printf("n\Hash table is empty, no items to find.\n");
@@ -191,7 +196,7 @@ char* ht_get_item(hash_table* ht, const char* key) {
 /* Remove item (key-value pair) in the hash table
    If item does not exist in the hash table then it will
    just print a message to the user*/
-void ht_remove_item(hash_table* ht, const char* key) {
+void ht_remove_item(hash_table* ht, char* key) {
 
     const int load = ht->num_items * 100 / ht->table_size;
     if (load < 10) {
@@ -224,5 +229,22 @@ void ht_remove_item(hash_table* ht, const char* key) {
         index = ht_get_hash(key, ht->table_size, i);
         item = ht->items[index];
         i++;
+    }
+}
+
+void print_hash_table(hash_table* ht){
+    for(int i = 0; i < ht->table_size; i++){
+        ht_item* item = ht->items[i];
+        if(item != NULL){
+            if(item != &HT_DELETED_ITEM){
+                printf("%d)\tMemory: %p\tKey: %s\tValue: %s\n",i+1, item, item->key, item->value);
+            }
+            else if(item == &HT_DELETED_ITEM){
+                printf("%d)\tMemory: %p\tDELETED ITEM\n",i+1, item);
+            }
+        }
+        else{
+            printf("%d)\tMemory: %p\tNULL\n",i+1, item);
+        }
     }
 }

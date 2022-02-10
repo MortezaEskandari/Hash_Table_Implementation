@@ -41,7 +41,9 @@ int main()
         // process user input
         switch(option){
             case 1:
-                printf("Not implemented yet.\n");
+                printf("\n");
+                print_hash_table(ht);
+                printf("\n");
                 break;
             case 2:
                 key = (char*) malloc(sizeof(char)*256);
