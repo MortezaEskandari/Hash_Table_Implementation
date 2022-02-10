@@ -107,7 +107,7 @@ static void ht_resize(hash_table* ht, const int new_table_size){
     for (int i = 0; i < ht->size; i++) {
         ht_item* item = ht->items[i];
         if (item != NULL && item != &HT_DELETED_ITEM) {
-            ht_insert(new_ht, item->key, item->value);
+            ht_put_item(new_ht, item->key, item->value);
         }
     }
 
@@ -135,7 +135,12 @@ static void ht_resize_down(hash_table* ht){
 }
 
 //
-void ht_insert(hash_table* ht, const char* key, const char* value) {
+void ht_put_item(hash_table* ht, const char* key, const char* value) {
+
+    const int load = ht->num_items * 100 / ht->table_size;
+    if(load > 70){
+        ht_resize_up(ht);
+    }
 
     // initialize the item struct to insert into the hash table
     ht_item* item = ht_new_item(key, value);
@@ -161,7 +166,7 @@ void ht_insert(hash_table* ht, const char* key, const char* value) {
 }
 
 //
-char* ht_search(hash_table* ht, const char* key) {
+char* ht_get_item(hash_table* ht, const char* key) {
 
     if(ht->num_items == 0){
         printf("n\Hash table is empty, no items to find.\n");
@@ -187,6 +192,11 @@ char* ht_search(hash_table* ht, const char* key) {
    If item does not exist in the hash table then it will
    just print a message to the user*/
 void ht_remove_item(hash_table* ht, const char* key) {
+
+    const int load = ht->num_items * 100 / ht->table_size;
+    if (load < 10) {
+        ht_resize_down(ht);
+    }
 
     // Check if hash table is empty
     if(ht->num_items == 0){

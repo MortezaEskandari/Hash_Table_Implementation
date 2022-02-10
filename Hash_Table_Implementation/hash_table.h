@@ -1,7 +1,7 @@
 #ifndef HASH_TABLE_H_INCLUDED
 #define HASH_TABLE_H_INCLUDED
 
-#define HT_INITIAL_SIZE
+#define HT_INITIAL_SIZE 17
 
 /* hash table item (holds the key-value pair) struct
    hash table will be an array of these key-value pairs

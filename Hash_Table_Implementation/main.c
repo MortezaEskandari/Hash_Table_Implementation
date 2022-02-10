@@ -10,7 +10,7 @@ int main()
     int option = 0; // stores the option user choses
     int validOption = 0; // uses to check if the user input is a valid option (an int)
 
-    hash_table* ht = new_ht(void); // The hash table initialization
+    hash_table* ht = ht_new(void); // The hash table initialization
 
     // Loop until user choses Quit then end loop and program
     while(loop != 0){
@@ -40,16 +40,23 @@ int main()
         // process user input
         switch(option){
             case 1:
+                printf("Not implemented yet.\n");
                 break;
             case 2:
+                char* key, value;
+                printf("Enter key: ");
+                scanf("%d", )
+                ht_put_item(ht, key, value);
                 break;
             case 3:
                 break;
             case 4:
                 break;
             case 5:
+                printf("Not implemented yet.\n");
                 break;
             case 6:
+                printf("Not implemented yet.\n");
                 break;
             case 7:
                 printf("\nQuitting program...\n");
