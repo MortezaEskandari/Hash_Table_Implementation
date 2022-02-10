@@ -3,11 +3,11 @@
 #include <string.h>
 
 #include "hash_table.h"
-#include "prime.c"
+#include "prime.h"
 
 static ht_item HT_DELETED_ITEM = {NULL, NULL};
 
-static hash_table* ht_new_sized(const int table_size) {
+static hash_table* ht_new_sized(const int new_table_size) {
 
     hash_table* ht = (hash_table*) malloc(sizeof(hash_table));
 
@@ -17,7 +17,7 @@ static hash_table* ht_new_sized(const int table_size) {
         exit(0); // abort program if malloc returned null
     }
 
-    ht->table_size = table_size; // starts with 17 by default if calling ht_new
+    ht->table_size = new_table_size; // starts with 17 by default if calling ht_new
     ht->num_items = 0;
     ht->items = (ht_item**) calloc((size_t)ht->size, sizeof(ht_item*));
 
@@ -98,12 +98,12 @@ static int ht_get_hash(const char* key, const int table_size, const int attempt)
     }
 }
 
-static void ht_resize(hash_table* ht, const int table_size){
-    if(table_size < HT_INITIAL_SIZE){
+static void ht_resize(hash_table* ht, const int new_table_size){
+    if(new_table_size < HT_INITIAL_SIZE){
         return;
     }
 
-    ht_hash_table* new_ht = ht_new_sized(base_size);
+    ht_hash_table* new_ht = ht_new_sized(new_table_size);
     for (int i = 0; i < ht->size; i++) {
         ht_item* item = ht->items[i];
         if (item != NULL && item != &HT_DELETED_ITEM) {
@@ -122,6 +122,16 @@ static void ht_resize(hash_table* ht, const int table_size){
     new_ht->items = temp_items;
 
     ht_free_table(new_ht);
+}
+
+static void ht_resize_up(hash_table* ht){
+    const int new_table_size = next_prime(ht->table_size * 2);
+    ht_resize(ht, new_table_size);
+}
+
+static void ht_resize_down(hash_table* ht){
+    const int new_table_size = next_prime(ht->table_size / 2);
+    ht_resize(ht, new_table_size);
 }
 
 //
