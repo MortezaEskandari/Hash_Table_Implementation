@@ -27,8 +27,10 @@ hash_table* ht_new();
 /* Return the size (current capacity) of the hash table */
 int ht_get_size(hash_table* ht);
 
-/* Clears the hash table and frees the memory */
-void ht_free_table(hash_table* ht);
+/* Clears the hash table and frees the memory
+   @param: int return_new_ht , if = 1 then returns a fresh new ht, if = 0 returns NULL
+   @param hash_table* ht , the hash table we are freeing from memory */
+hash_table* ht_free_table(hash_table* ht, int return_new_ht);
 
 /* put item (key-value pair) into the hash table, if it does not already exist
    else do nothing and print a message to let user know */

@@ -61,7 +61,7 @@ static void ht_free_item(ht_item* item) {
 }
 
 /* Clears the hash table and frees the memory, resets hash table */
-void ht_free_table(hash_table* ht) {
+hash_table* ht_free_table(hash_table* ht, int return_new_ht) {
 
     for (int i = 0; i < ht->table_size; i++) {
         ht_item* item = ht->items[i];
@@ -71,6 +71,12 @@ void ht_free_table(hash_table* ht) {
     }
     free(ht->items);
     free(ht);
+
+    if(return_new_ht == 1){
+        return ht_new();
+    }
+
+    return NULL;
 }
 
 // Hash Function used to get the index of the key
@@ -122,7 +128,7 @@ static void ht_resize(hash_table* ht, int new_table_size){
     ht->items = new_ht->items;
     new_ht->items = temp_items;
 
-    ht_free_table(new_ht);
+    ht_free_table(new_ht, 0);
 }
 
 static void ht_resize_up(hash_table* ht){
@@ -187,6 +193,7 @@ char* ht_get_item(hash_table* ht, const char* key) {
         item = ht->items[index];
         i++;
     }
+    printf("\nItem does not exist.\n\n");
     return NULL;
 }
 

@@ -4,6 +4,8 @@
 #include "hash_table.h"
 #include "prime.h"
 
+hash_table* ht;
+
 int main()
 {
     int loop = 1; // loop = 1 (continue loop) , loop = 0 (end loop)
@@ -12,7 +14,7 @@ int main()
     char *key, *value;
 //    char* value; // Above error when only putting * for key and not for value also other wise separate line for value like this line
 
-    hash_table* ht = ht_new(); // The hash table initialization
+     ht = ht_new(); // The hash table initialization
 
     // Loop until user choses Quit then end loop and program
     while(loop != 0){
@@ -23,18 +25,17 @@ int main()
             printf("Please select an option below.\n");
             printf("1) Print Hash Table.\n");
             printf("2) Add Item.\n");
-            printf("3) Delete Item.\n");
-            printf("4) Search for Item.\n");
-            printf("5) Print size of Hash Table.\n");
-            printf("6) Clear Hash Table.\n");
-            printf("7) Quit.\n");
-            printf("\nEnter Option (1-7): ");
+            printf("3) Remove Item.\n");
+            printf("4) Get Item.\n");
+            printf("5) Clear Hash Table.\n");
+            printf("6) Quit.\n");
+            printf("\nEnter Option (1-6): ");
 
             // Get user input
             validOption = scanf("%d", &option);
 
             if(validOption != 1){
-                printf("\nInvalid option. Choose between 1-7.\n\n");
+                printf("\nInvalid option. Choose between 1-6.\n\n");
                 scanf("%*[^\n]");
             }
         } while(validOption != 1);
@@ -47,6 +48,8 @@ int main()
                 printf("\n");
                 break;
             case 2:
+                printf("\nAdd Key-Value pair\n");
+
                 key = (char*) malloc(sizeof(char)*256);
 
                 if(key == NULL){
@@ -77,6 +80,8 @@ int main()
                 free(value);
                 break;
             case 3:
+                printf("\nRemove Key-Value pair\n");
+
                 key = (char*) malloc(sizeof(char)*256);
 
                 if(key == NULL){
@@ -95,20 +100,48 @@ int main()
                 free(key);
                 break;
             case 4:
-                printf("Not implemented yet.\n");
+                printf("\nSearch for Key-Value pair\n");
+
+                key = (char*) malloc(sizeof(char)*256);
+
+                if(key == NULL){
+                    printf("Unable to allocate memory for key.\n");
+                    printf("Quitting program...\n");
+                    exit(0); // abort program if malloc returned null
+                }
+
+                printf("Enter key: ");
+                scanf("%255s",key);
+
+                if(ht_get_item(ht, key) != NULL){
+                    printf("\nKey: %s\tValue: %s\n\n",key, ht_get_item(ht, key));
+                }
+
+                free(key);
                 break;
             case 5:
-                printf("Not implemented yet.\n");
+                printf("\Clearing the hash table...\n");
+
+                ht = ht_free_table(ht, 1);
+
+                if(ht != NULL){
+                    printf("\nSuccessfully cleared the hash table\n\n");
+                    print_hash_table(ht);
+                    printf("\n");
+                }
+                else{
+                    printf("\nError occurred trying to clear hash table...\n");
+                    printf("Quitting program...\n");
+                    exit(0); // abort program if malloc returned null
+                }
+
                 break;
             case 6:
-                printf("Not implemented yet.\n");
-                break;
-            case 7:
                 printf("\nQuitting program...\n");
                 loop = 0;
                 break;
             default:
-                printf("\nInvalid option. Chose between 1-7.\n\n");
+                printf("\nInvalid option. Chose between 1-6.\n\n");
                 break;
         }
     }
