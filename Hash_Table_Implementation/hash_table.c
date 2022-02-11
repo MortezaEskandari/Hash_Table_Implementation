@@ -65,10 +65,11 @@ hash_table* ht_free_table(hash_table* ht, int return_new_ht) {
 
     for (int i = 0; i < ht->table_size; i++) {
         ht_item* item = ht->items[i];
-        if (item != NULL) {
+        if (item != NULL && item != &HT_DELETED_ITEM) {
             ht_free_item(item);
         }
     }
+
     free(ht->items);
     free(ht);
 
@@ -77,6 +78,10 @@ hash_table* ht_free_table(hash_table* ht, int return_new_ht) {
     }
 
     return NULL;
+}
+
+int ht_get_size(hash_table* ht){
+    return ht->num_items;
 }
 
 // Hash Function used to get the index of the key
@@ -106,11 +111,14 @@ static int ht_get_hash(const char* key, int table_size, int attempt) {
 }
 
 static void ht_resize(hash_table* ht, int new_table_size){
+
     if(new_table_size < HT_INITIAL_SIZE){
+        printf("\nCould not resize the hash table\n");
         return;
     }
 
     hash_table* new_ht = ht_new_sized(new_table_size);
+
     for (int i = 0; i < ht->table_size; i++) {
         ht_item* item = ht->items[i];
         if (item != NULL && item != &HT_DELETED_ITEM) {
@@ -202,11 +210,6 @@ char* ht_get_item(hash_table* ht, const char* key) {
    just print a message to the user*/
 void ht_remove_item(hash_table* ht, const char* key) {
 
-    const int load = ht->num_items * 100 / ht->table_size;
-    if (load < 10) {
-        ht_resize_down(ht);
-    }
-
     // Check if hash table is empty
     if(ht->num_items == 0){
         printf("\nHash table is empty, no items to remove.\n");
@@ -228,6 +231,11 @@ void ht_remove_item(hash_table* ht, const char* key) {
                 ht->items[index] = &HT_DELETED_ITEM;
                 ht->num_items--;
                 printf("\nItem successfully removed from the hash table.\n");
+
+                const int load = ht->num_items * 100 / ht->table_size;
+                if (load < 10) {
+                    ht_resize_down(ht);
+                }
                 return;
             }
         }

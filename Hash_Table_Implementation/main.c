@@ -27,15 +27,16 @@ int main()
             printf("2) Add Item.\n");
             printf("3) Remove Item.\n");
             printf("4) Get Item.\n");
-            printf("5) Clear Hash Table.\n");
-            printf("6) Quit.\n");
-            printf("\nEnter Option (1-6): ");
+            printf("5) Get size.\n");
+            printf("6) Clear Hash Table.\n");
+            printf("7) Quit.\n");
+            printf("\nEnter Option (1-7): ");
 
             // Get user input
             validOption = scanf("%d", &option);
 
             if(validOption != 1){
-                printf("\nInvalid option. Choose between 1-6.\n\n");
+                printf("\nInvalid option. Choose between 1-7.\n\n");
                 scanf("%*[^\n]");
             }
         } while(validOption != 1);
@@ -120,6 +121,9 @@ int main()
                 free(key);
                 break;
             case 5:
+                printf("\nThere are %d items in the hash table\n\n", ht_get_size(ht));
+                break;
+            case 6:
                 printf("\Clearing the hash table...\n");
 
                 ht = ht_free_table(ht, 1);
@@ -136,12 +140,12 @@ int main()
                 }
 
                 break;
-            case 6:
+            case 7:
                 printf("\nQuitting program...\n");
                 loop = 0;
                 break;
             default:
-                printf("\nInvalid option. Chose between 1-6.\n\n");
+                printf("\nInvalid option. Chose between 1-7.\n\n");
                 break;
         }
     }
